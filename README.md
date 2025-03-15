@@ -8,7 +8,6 @@
 ---
 
 ## **🔥 Fitur Keren:**  
-✅ **Subdomain Enumeration** → Kumpulin semua subdomain yang tersembunyi 🔍  
 ✅ **Directory Bruteforce** → Bongkar folder-folder tersembunyi 📁  
 ✅ **Vulnerability Scanner** → Nyari celah RCE, IDOR, XSS, dll. 📡  
 ✅ **Automated Recon** → Klik sekali, biarin tools yang kerja buat lo 💪  
