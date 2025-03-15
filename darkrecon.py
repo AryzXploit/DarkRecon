@@ -88,7 +88,8 @@ def run_scan(scan_func, user_id, *args):
 
 def main():
     console.clear()
-    
+
+    # Banner dengan status login
     banner("none")
 
     if not os.path.exists(os.path.expanduser("~/.config/.hidden_directory/hidden_users.json")):
@@ -111,9 +112,15 @@ def main():
 
         break
 
+    # Menambahkan delay setelah login sebelum melanjutkan
+    console.print("\n[bold green]Login berhasil![/bold green] Welcome to DarkRecon.")
+    time.sleep(2)  # Delay 2 detik sebelum masuk ke menu utama
+
+    # Clear screen dan tampilkan banner dengan status role user
     console.clear()
     banner(role)
 
+    # Menu dan tools
     tools_map = {
         "1": (whatweb_scan, "🌍 [bold cyan]Enter URL: [/bold cyan]"),
         "2": (sqlmap_scan, "🛡️ [bold cyan]Enter URL: [/bold cyan]"),
@@ -154,5 +161,6 @@ def main():
         else:
             console.print("⚠️ [bold yellow]Invalid choice! Try again.[/bold yellow]")
             time.sleep(3)
+            
 if __name__ == "__main__":
     main()
