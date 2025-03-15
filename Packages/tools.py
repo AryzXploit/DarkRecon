@@ -1,6 +1,7 @@
 import subprocess
 from rich.console import Console
 import os
+import json  # Import the json module
 
 console = Console()
 
@@ -76,7 +77,7 @@ def nuclei_email_extraction(url, user_id):
 
 def nuclei_technologies(url, user_id):
     if check_user_role(user_id) in ["premium", "admin"]:
-        return run_command(f"nuclei -u {url} -t nuclei-templates/technologies/ -silent")
+        return run_command(f"nuclei -u {url} -t /home/user/nuclei-templates/technologies/ -silent")
     return "🔒 Access Denied!"
 
 # Fungsi cek role (bisa diimplementasikan dengan file JSON atau lainnya)
