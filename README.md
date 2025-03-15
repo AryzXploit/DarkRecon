@@ -65,3 +65,5 @@ bash setup.sh && python3 daftar.py
 🔥 **"Hacking itu seni, bukan kejahatan. Kecuali kalau ketahuan."** 🔥  
 🔥 **Everything Can Be Hacked, kecuali Indomie. Itu sakral.** 🔥
 
+##**Darkrecon menggunakan tools projectdiscovery untuk memaksimalkan scanning, harap download golang dan repo semua tools projectdiscovery**
+
