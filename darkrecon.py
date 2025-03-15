@@ -1,14 +1,14 @@
 import sys
 import os
 import time
-import json  # Jangan lupa import json!
+import json
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn, TimeElapsedColumn
 
 # Tambahkan path folder packages ke sys.path
-sys.path.append(os.path.join(os.path.dirname(__file__), 'packages'))
+sys.path.append(os.path.join(os.path.dirname(__file__), 'Packages'))
 from tools import *  # Import semua fungsi dari tools.py
 
 console = Console()
