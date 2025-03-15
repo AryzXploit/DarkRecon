@@ -1,11 +1,15 @@
+import sys
+import os
+import time
+import json  # Jangan lupa import json!
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn, TimeElapsedColumn
-from tools import *
-import os
-import time
-import json  # Jangan lupa import json!
+
+# Tambahkan path folder packages ke sys.path
+sys.path.append(os.path.join(os.path.dirname(__file__), 'packages'))
+from tools import *  # Import semua fungsi dari tools.py
 
 console = Console()
 
@@ -25,7 +29,6 @@ def check_user_role(user_id):
     try:
         with open(os.path.expanduser("~/.config/.hidden_directory/hidden_users.json"), "r") as file:
             data = json.load(file)
-
         if user_id in data["users"]:
             return data["users"][user_id]["role"]
         else:
@@ -62,13 +65,11 @@ def run_scan(scan_func, user_id, *args):
             console=console
         ) as progress:
             task = progress.add_task("Scanning...", total=100)
-            
             for i in range(100):
                 progress.update(task, advance=1)
                 time.sleep(0.11)
         
         time.sleep(2)
-        
         console.print(f"\n⚡ Running: {scan_func.__name__} with args: {args}\n")
         
         if scan_func in [subrecon_scan, wpscan, dalfox_scan, nuclei_email_extraction, nuclei_technologies]:
@@ -88,7 +89,6 @@ def run_scan(scan_func, user_id, *args):
 
 def main():
     console.clear()
-    
     banner("none")
 
     if not os.path.exists(os.path.expanduser("~/.config/.hidden_directory/hidden_users.json")):
