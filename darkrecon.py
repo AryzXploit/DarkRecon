@@ -153,6 +153,6 @@ def main():
                 run_scan(tool_func, user_id, url)
         else:
             console.print("⚠️ [bold yellow]Invalid choice! Try again.[/bold yellow]")
-
+            time.sleep(3)
 if __name__ == "__main__":
     main()
