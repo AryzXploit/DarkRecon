@@ -1,15 +1,11 @@
-import sys
-import os
-import time
-import json
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn, TimeElapsedColumn
-
-# Tambahkan path folder packages ke sys.path
-sys.path.append(os.path.join(os.path.dirname(__file__), 'Packages'))
-from tools import *  # Import semua fungsi dari tools.py
+from tools import *
+import os
+import time
+import json  
 
 console = Console()
 
@@ -19,7 +15,7 @@ def banner(role_status):
         f"💀 [bold magenta]DarkRecon[/bold magenta] 💀\n"
         f"🛡️ [cyan]Advanced Security Testing Framework[/cyan]\n"
         f"👨‍💻 [bold white]Creator:[/] AryzXploit\n"
-        f"🆙 [bold white]Version:[/] 1.1\n"
+        f"🆙 [bold white]Version:[/] 1.1\n"  
         f"🆓 [bold white]Status:[/] {status_text}",
         expand=False,
         border_style="bright_magenta"
@@ -29,6 +25,7 @@ def check_user_role(user_id):
     try:
         with open(os.path.expanduser("~/.config/.hidden_directory/hidden_users.json"), "r") as file:
             data = json.load(file)
+
         if user_id in data["users"]:
             return data["users"][user_id]["role"]
         else:
@@ -65,11 +62,13 @@ def run_scan(scan_func, user_id, *args):
             console=console
         ) as progress:
             task = progress.add_task("Scanning...", total=100)
+            
             for i in range(100):
                 progress.update(task, advance=1)
                 time.sleep(0.11)
         
         time.sleep(2)
+        
         console.print(f"\n⚡ Running: {scan_func.__name__} with args: {args}\n")
         
         if scan_func in [subrecon_scan, wpscan, dalfox_scan, nuclei_email_extraction, nuclei_technologies]:
@@ -89,6 +88,7 @@ def run_scan(scan_func, user_id, *args):
 
 def main():
     console.clear()
+    
     banner("none")
 
     if not os.path.exists(os.path.expanduser("~/.config/.hidden_directory/hidden_users.json")):
@@ -118,38 +118,41 @@ def main():
         "1": (whatweb_scan, "🌍 [bold cyan]Enter URL: [/bold cyan]"),
         "2": (sqlmap_scan, "🛡️ [bold cyan]Enter URL: [/bold cyan]"),
         "3": (nuclei_exposed_panel, "🔎 [bold cyan]Enter URL: [/bold cyan]"),
-        "4": (nmap_scan, "📡 [bold cyan]Enter Target IP or Domain: [/bold cyan]"),
-        "5": (gobuster_scan, "🚀 [bold cyan]Enter URL: [/bold cyan]", "🔑 [bold cyan]Enter Wordlist Path: [/bold cyan]"),
+        "4": (nmap_scan, "📡 [bold cyan]Enter Target (IP/Domain): [/bold cyan]"),
+        "5": (gobuster_scan, "🚀 [bold cyan]Enter URL: [/bold cyan]", "📜 [bold cyan]Enter Wordlist Path: [/bold cyan]"),
         "6": (dns_tools, "🌐 [bold cyan]Enter Domain: [/bold cyan]"),
         "7": (nslookup, "🔍 [bold cyan]Enter Domain: [/bold cyan]"),
-        "8": (subrecon_scan, "🌍 [bold cyan]Enter Domain: [/bold cyan]"),
+        "8": (subrecon_scan, "🔬 [bold cyan]Enter Domain: [/bold cyan]"),
         "9": (wpscan, "📝 [bold cyan]Enter URL: [/bold cyan]"),
         "10": (dalfox_scan, "🎯 [bold cyan]Enter URL: [/bold cyan]"),
         "11": (nuclei_email_extraction, "📧 [bold cyan]Enter URL: [/bold cyan]"),
         "12": (nuclei_technologies, "🖥️ [bold cyan]Enter URL: [/bold cyan]"),
-        "13": None
+        "13": "exit"
     }
 
     while True:
+        console.clear()
+        banner(role)
         menu()
-        choice = console.input("\n[bold yellow]Enter your choice:[/bold yellow] ").strip()
+
+        choice = console.input("\n⚡ [bold yellow]>> Your choice:[/] ")
 
         if choice == "13":
-            console.print("\n[bold red]Exiting...[/bold red]")
+            console.print("❌ [bold red]Exiting DarkRecon...[/bold red]")
             break
 
         if choice in tools_map:
-            tool_func, prompt_url = tools_map[choice][:2]
-            if len(tools_map[choice]) > 2:
-                prompt_wordlist = tools_map[choice][2]
+            if choice == "5":
+                tool_func, prompt_url, prompt_wordlist = tools_map[choice]
                 url = console.input(prompt_url)
                 wordlist = console.input(prompt_wordlist)
                 run_scan(tool_func, user_id, url, wordlist)
             else:
-                url = console.input(prompt_url)
+                tool_func, prompt = tools_map[choice]
+                url = console.input(prompt)
                 run_scan(tool_func, user_id, url)
         else:
-            console.print("\n❌ [bold red]Invalid choice! Please try again.[/bold red]")
+            console.print("⚠️ [bold yellow]Invalid choice! Try again.[/bold yellow]")
 
 if __name__ == "__main__":
     main()
