@@ -118,41 +118,38 @@ def main():
         "1": (whatweb_scan, "🌍 [bold cyan]Enter URL: [/bold cyan]"),
         "2": (sqlmap_scan, "🛡️ [bold cyan]Enter URL: [/bold cyan]"),
         "3": (nuclei_exposed_panel, "🔎 [bold cyan]Enter URL: [/bold cyan]"),
-        "4": (nmap_scan, "📡 [bold cyan]Enter Target (IP/Domain): [/bold cyan]"),
-        "5": (gobuster_scan, "🚀 [bold cyan]Enter URL: [/bold cyan]", "📜 [bold cyan]Enter Wordlist Path: [/bold cyan]"),
+        "4": (nmap_scan, "📡 [bold cyan]Enter Target IP or Domain: [/bold cyan]"),
+        "5": (gobuster_scan, "🚀 [bold cyan]Enter URL: [/bold cyan]", "🔑 [bold cyan]Enter Wordlist Path: [/bold cyan]"),
         "6": (dns_tools, "🌐 [bold cyan]Enter Domain: [/bold cyan]"),
         "7": (nslookup, "🔍 [bold cyan]Enter Domain: [/bold cyan]"),
-        "8": (subrecon_scan, "🔬 [bold cyan]Enter Domain: [/bold cyan]"),
+        "8": (subrecon_scan, "🌍 [bold cyan]Enter Domain: [/bold cyan]"),
         "9": (wpscan, "📝 [bold cyan]Enter URL: [/bold cyan]"),
         "10": (dalfox_scan, "🎯 [bold cyan]Enter URL: [/bold cyan]"),
         "11": (nuclei_email_extraction, "📧 [bold cyan]Enter URL: [/bold cyan]"),
         "12": (nuclei_technologies, "🖥️ [bold cyan]Enter URL: [/bold cyan]"),
-        "13": "exit"
+        "13": None
     }
 
     while True:
-        console.clear()
-        banner(role)
         menu()
-
-        choice = console.input("\n⚡ [bold yellow]>> Your choice:[/] ")
+        choice = console.input("\n[bold yellow]Enter your choice:[/bold yellow] ").strip()
 
         if choice == "13":
-            console.print("❌ [bold red]Exiting DarkRecon...[/bold red]")
+            console.print("\n[bold red]Exiting...[/bold red]")
             break
 
         if choice in tools_map:
-            if choice == "5":
-                tool_func, prompt_url, prompt_wordlist = tools_map[choice]
+            tool_func, prompt_url = tools_map[choice][:2]
+            if len(tools_map[choice]) > 2:
+                prompt_wordlist = tools_map[choice][2]
                 url = console.input(prompt_url)
                 wordlist = console.input(prompt_wordlist)
                 run_scan(tool_func, user_id, url, wordlist)
             else:
-                tool_func, prompt = tools_map[choice]
-                url = console.input(prompt)
+                url = console.input(prompt_url)
                 run_scan(tool_func, user_id, url)
         else:
-            console.print("⚠️ [bold yellow]Invalid choice! Try again.[/bold yellow]")
+            console.print("\n❌ [bold red]Invalid choice! Please try again.[/bold red]")
 
 if __name__ == "__main__":
     main()
