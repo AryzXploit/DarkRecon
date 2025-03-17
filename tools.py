@@ -54,7 +54,6 @@ def nmap_scan(target): return run_command(f"nmap -sV {target}")
 def gobuster_scan(url, wordlist): return run_command(f"gobuster dir -u {url} -w {wordlist}")
 def dns_tools(domain): return run_command(f"dig {domain}")
 def nslookup(domain): return run_command(f"nslookup {domain}")
-def nuclei_lfi_scan(url): return run_command(f"nuclei -u {url} -t /home/user/nuclei-templates/http/lfi/ -silent")
 
 # 🔒 PREMIUM TOOLS
 def subrecon_scan(domain, user_id):
@@ -82,13 +81,22 @@ def nuclei_technologies(url, user_id):
         return run_command(f"nuclei -u {url} -t nuclei-templates/technologies/ -silent")
     return "🔒 Access Denied!"
 
-# 🔒 PREMIUM TOOLS (update)
-def nuclei_rce_scan(url, user_id):
+def nuclei_lfi_scan(url, user_id):
     if check_user_role(user_id) in ["premium", "admin"]:
-        return run_command(f"nuclei -u {url} -t /home/user/nuclei-templates/http/rce/ -silent")
+        return run_command(f"nuclei -u {url} -t nuclei-templates/lfi/ -silent")
     return "🔒 Access Denied!"
 
-def nuclei_ssrf_scan(url, user_id):
+def ffuf_scan(url, wordlist, user_id):
     if check_user_role(user_id) in ["premium", "admin"]:
-        return run_command(f"nuclei -u {url} -t /home/user/nuclei-templates/http/ssrf/ -silent")
+        return run_command(f"ffuf -u {url}/FUZZ -w {wordlist}")
+    return "🔒 Access Denied!"
+
+def hakrawler_scan(url, user_id):
+    if check_user_role(user_id) in ["premium", "admin"]:
+        return run_command(f"hakrawler -url {url}")
+    return "🔒 Access Denied!"
+
+def jaeles_scan(url, user_id):
+    if check_user_role(user_id) in ["premium", "admin"]:
+        return run_command(f"jaeles scan -u {url}")
     return "🔒 Access Denied!"
