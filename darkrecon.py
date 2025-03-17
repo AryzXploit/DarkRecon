@@ -24,7 +24,7 @@ def banner(role_status):
         f"💀 [bold magenta]DarkRecon[/bold magenta] 💀\n"
         f"🛡️ [cyan]Advanced Security Testing Framework[/cyan]\n"
         f"👨‍💻 [bold white]Creator:[/] AryzXploit\n"
-        f"🆙 [bold white]Version:[/] 1.2\n"  
+        f"🆙 [bold white]Version:[/] 1.1\n"  
         f"🔹 [bold white]Status:[/] {status_text}",
         expand=False,
         border_style="bright_magenta"
@@ -48,10 +48,10 @@ def menu():
     table.add_column("Tool", style="bold cyan")
 
     tools = [
-        "🌍 WhatWeb", "🛡️ SQLMap", "🔎 Nuclei (Exposed Panel)", "📡 Nmap", "🚀 GoBuster",
+        "🌍 WhatWeb", "🛡️ SQLMap", "🔎 Subzy [Scanner Subdomain takeovers]", "📡 Nmap", "🚀 GoBuster",
         "🌐 DNS Tools", "🔍 Nslookup",
-        "[PREMIUM] 🔬 SubRecon & Amass", "[PREMIUM] 📝 WPScan", "[PREMIUM] 🎯 Dalfox",
-        "[PREMIUM] 📧 Nuclei (Email Extraction)", "[PREMIUM] 💀 Nuclei (Remote-Execution OP!)",
+        "[PREMIUM] 🔬 SubRecon & Amass", "[PREMIUM] 📝 WPScan [Buat scan wordpress]", "[PREMIUM] 🎯 Dalfox",
+        "[PREMIUM] 📧 Nuclei (Email Extraction)", "[PREMIUM] 💀 Nuclei [Remote-Execution OP!]",
         "[bold red]❌ Exit Framework[/bold red]"
     ]
 
@@ -159,17 +159,17 @@ def main():
     tools_map = {
         "1": (whatweb_scan, "🌍 [bold cyan]Enter URL: [/bold cyan]"),
         "2": (sqlmap_scan, "🛡️ [bold cyan]Enter URL: [/bold cyan]"),
-        "3": (nuclei_exposed_panel, "🔎 [bold cyan]Enter URL: [/bold cyan]"),
+        "3": (subzy, "🔎 [bold cyan]Enter Domain: [/bold cyan]"),
         "4": (nmap_scan, "📡 [bold cyan]Enter Target (IP/Domain): [/bold cyan]"),
         "5": (gobuster_scan, "🚀 [bold cyan]Enter URL: [/bold cyan]", "📜 [bold cyan]Enter Wordlist Path: [/bold cyan]"),
         "6": (dns_tools, "🌐 [bold cyan]Enter Domain: [/bold cyan]"),
         "7": (nslookup, "🔍 [bold cyan]Enter Domain: [/bold cyan]"),
         "8": (subrecon_scan, "🔬 [bold cyan]Enter Domain: [/bold cyan]"),
         "9": (wpscan, "📝 [bold cyan]Enter URL: [/bold cyan]"),
-        "10": (dalfox_scan, "🎯 [bold cyan]Enter URL: [/bold cyan]"),
-        "11": (nuclei_email_extraction, "📧 [bold cyan]Enter URL: [/bold cyan]"),
-        "12": (nuclei_rce_scan, "🖥️ [bold cyan]Enter URL: [/bold cyan]"),
-        "13": "exit"
+        "10":(dalfox_scan, "🎯 [bold cyan]Enter URL: [/bold cyan]"),
+        "11":(nuclei_email_extraction, "📧 [bold cyan]Enter URL: [/bold cyan]"),
+        "12":(nuclei_rce_scan, "🖥️ [bold cyan]Enter URL: [/bold cyan]"),
+        "14": "exit"
     }
 
     while True:
