@@ -10,7 +10,7 @@
 ![Example Image]([https://files.catbox.moe/asnqtz.png)
 
 ##**INFO UPDATE 1.2!!**
-- PENAMBAHAN SCANNER SUBDOMAIN TAKEOVERS VIA 🔥🔥
+- PENAMBAHAN SCANNER SUBDOMAIN TAKEOVERS VIA SUBZY 🔥🔥
 - GAK ADA SIH CUMA ITU DOANG WKWKWK
 
 ## **🔥 Fitur Keren:**  
