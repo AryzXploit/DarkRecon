@@ -48,14 +48,13 @@ def run_command(command):
 
 # ✅ FREE TOOLS
 def whatweb_scan(url): return run_command(f"whatweb {url}")
-def sqlmap_scan(url): return run_command(f"sqlmap -u {url} --random-agent --batch --dbs --level 3 --tamper=between,space2comment --hex --delay 5")
+def sqlmap_scan(url): return run_command(f"sqlmap -u {url} --batch --dbs")
 def nuclei_exposed_panel(url): return run_command(f"nuclei -u {url} -t /home/user/nuclei-templates/http/exposed-panels/ -silent")
 def nmap_scan(target): return run_command(f"nmap -sV {target}")
 def gobuster_scan(url, wordlist): return run_command(f"gobuster dir -u {url} -w {wordlist}")
 def dns_tools(domain): return run_command(f"dig {domain}")
 def nslookup(domain): return run_command(f"nslookup {domain}")
-def nuclei_lfi_scan(url):
-    return run_command(f"nuclei -u {url} -t /home/user/nuclei-templates/http/lfi/ -silent")
+def nuclei_lfi_scan(url): return run_command(f"nuclei -u {url} -t /home/user/nuclei-templates/http/lfi/ -silent")
 
 # 🔒 PREMIUM TOOLS
 def subrecon_scan(domain, user_id):
@@ -93,4 +92,3 @@ def nuclei_ssrf_scan(url, user_id):
     if check_user_role(user_id) in ["premium", "admin"]:
         return run_command(f"nuclei -u {url} -t /home/user/nuclei-templates/http/ssrf/ -silent")
     return "🔒 Access Denied!"
-
