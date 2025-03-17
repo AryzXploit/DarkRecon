@@ -98,10 +98,8 @@ def run_scan(scan_func, user_id, *args):
 def main():
     console.clear()
 
-    # Banner awal (tanpa role)
     banner("none")
-
-    # Cek apakah file user role sudah ada
+    
     user_file_path = os.path.expanduser("~/.config/.hidden_directory/hidden_users.json")
     
     if not os.path.exists(user_file_path):
@@ -124,17 +122,14 @@ def main():
 
         break
 
-    # Menentukan emoji berdasarkan role
     role_emoji = {
         "member": "🙌",
         "premium": "💎",
         "admin": "💀"
     }
 
-    # Menampilkan pesan welcome dengan emoji
     console.print(f"\n✅ [bold green]Login berhasil![/bold green] Welcome to DarkRecon {role.capitalize()} {role_emoji.get(role, '🙌')}!")
 
-    # Efek loading sebelum masuk ke menu utama
     with Progress(
         SpinnerColumn(),
         TextColumn("[bold cyan]Loading framework...[/bold cyan]"),
@@ -149,13 +144,11 @@ def main():
             time.sleep(0.05)
 
     console.print("\n🚀 [bold cyan]DarkRecon is ready![/bold cyan]")
-    time.sleep(1.5)  # Delay sebelum masuk ke menu utama
+    time.sleep(1.5)  
     console.clear()
 
-    # Banner sesuai role user
     banner(role)
 
-    # Menu dan tools
     tools_map = {
         "1": (whatweb_scan, "🌍 [bold cyan]Enter URL: [/bold cyan]"),
         "2": (sqlmap_scan, "🛡️ [bold cyan]Enter URL: [/bold cyan]"),
