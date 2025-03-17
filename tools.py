@@ -54,6 +54,7 @@ def nmap_scan(target): return run_command(f"nmap -sV {target}")
 def gobuster_scan(url, wordlist): return run_command(f"gobuster dir -u {url} -w {wordlist}")
 def dns_tools(domain): return run_command(f"dig {domain}")
 def nslookup(domain): return run_command(f"nslookup {domain}")
+def subzy(domain): return run_command(f"subzy run --target {domain}")
 
 # 🔒 PREMIUM TOOLS
 def subrecon_scan(domain, user_id):
