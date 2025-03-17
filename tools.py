@@ -48,8 +48,8 @@ def run_command(command):
 
 # ✅ FREE TOOLS
 def whatweb_scan(url): return run_command(f"whatweb {url}")
-def sqlmap_scan(url): return run_command(f"sqlmap -u {url} --batch --dbs")
-def nuclei_exposed_panel(url): return run_command(f"nuclei -u {url} -t /home/user/nuclei-templates/http/exposed-panels/ -silent")
+def sqlmap_scan(url): return run_command(f"sqlmap -u {url} --random-agent --batch --dbs --level 3 --tamper=between,space2comment --hex --delay 5")
+def nuclei_exposed_panel(url): return run_command(f"nuclei -u {url} -t exposures -silent")
 def nmap_scan(target): return run_command(f"nmap -sV {target}")
 def gobuster_scan(url, wordlist): return run_command(f"gobuster dir -u {url} -w {wordlist}")
 def dns_tools(domain): return run_command(f"dig {domain}")
@@ -63,7 +63,7 @@ def subrecon_scan(domain, user_id):
 
 def wpscan(url, user_id):
     if check_user_role(user_id) in ["premium", "admin"]:
-        return run_command(f"wpscan --url {url} --enumerate vp,vt,u")
+        return run_command(f"wpscan --url {url} --enumerate vp,vt,u --random-user-agent")
     return "🔒 Access Denied!"
 
 def dalfox_scan(url, user_id):
@@ -73,12 +73,12 @@ def dalfox_scan(url, user_id):
 
 def nuclei_email_extraction(url, user_id):
     if check_user_role(user_id) in ["premium", "admin"]:
-        return run_command(f"nuclei -u {url} -t /home/user/nuclei-templates/http/exposures/ -silent")
+        return run_command(f"nuclei -u {url} -tags exposures -silent")
     return "🔒 Access Denied!"
 
 def nuclei_technologies(url, user_id):
     if check_user_role(user_id) in ["premium", "admin"]:
-        return run_command(f"nuclei -u {url} -t nuclei-templates/technologies/ -silent")
+        return run_command(f"nuclei -u {url} -tags technologies -silent")
     return "🔒 Access Denied!"
     
 def nuclei_rce_scan(url, user_id):
