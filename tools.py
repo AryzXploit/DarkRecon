@@ -100,3 +100,9 @@ def jaeles_scan(url, user_id):
     if check_user_role(user_id) in ["premium", "admin"]:
         return run_command(f"jaeles scan -u {url}")
     return "🔒 Access Denied!"
+
+def nuclei_rce_scan(url, user_id):
+    if check_user_role(user_id) in ["premium", "admin"]:
+        return run_command(f"nuclei -u {url} -t nuclei-templates/rce/ -silent")
+    return "🔒 Access Denied!"
+
