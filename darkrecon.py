@@ -15,7 +15,7 @@ def banner(role_status):
         f"💀 [bold magenta]DarkRecon[/bold magenta] 💀\n"
         f"🛡️ [cyan]Advanced Security Testing Framework[/cyan]\n"
         f"👨‍💻 [bold white]Creator:[/] AryzXploit\n"
-        f"🆙 [bold white]Version:[/] 1.1\n"  
+        f"🆙 [bold white]Version:[/] 1.2\n"  
         f"🆓 [bold white]Status:[/] {status_text}",
         expand=False,
         border_style="bright_magenta"
@@ -29,6 +29,55 @@ def check_user_role(user_id):
         return data["users"].get(user_id, {}).get("role", "none")
     except (FileNotFoundError, json.JSONDecodeError):
         return "none"
+
+def menu():
+    table = Table(title="🛠️ [bold cyan]Available Tools[/bold cyan]", show_header=True, header_style="bold white", border_style="bright_blue")
+    table.add_column("No", style="bold yellow", width=5)
+    table.add_column("Tool", style="bold cyan")
+
+    tools = [
+        "🌍 WhatWeb", "🛡️ SQLMap", "🔎 Nuclei (Exposed Panel)", "📡 Nmap", "🚀 GoBuster",
+        "🌐 DNS Tools", "🔍 Nslookup",
+        "[PREMIUM] 🔬 SubRecon & Amass", "[PREMIUM] 📝 WPScan", "[PREMIUM] 🎯 Dalfox",
+        "[PREMIUM] 📧 Nuclei (Email Extraction)", "[PREMIUM] 🖥️ Nuclei (Technologies Detection)",
+        "[PREMIUM] 🛠️ Nuclei (LFI Scan)", "[PREMIUM] 🔥 Nuclei (RCE Scan)", "[PREMIUM] 🌍 Nuclei (SSRF Scan)",
+        "[bold red]❌ Exit Framework[/bold red]"
+    ]
+
+    for i, tool in enumerate(tools, 1):
+        table.add_row(str(i), tool)
+
+    console.print(table)
+
+def run_scan(scan_func, user_id, *args):
+    try:
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[bold cyan]Scanning..."),
+            BarColumn(),
+            TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
+            TimeElapsedColumn(),
+            console=console
+        ) as progress:
+            task = progress.add_task("Scanning...", total=100)
+            
+            for i in range(100):
+                progress.update(task, advance=1)
+                time.sleep(0.1)
+        
+        console.print(f"\n⚡ Running: {scan_func.__name__} with args: {args}\n")
+        
+        result = scan_func(*args, user_id) if "user_id" in scan_func.__code__.co_varnames else scan_func(*args)
+        
+        if not result or result.strip() == "":
+            console.print("\n⚠️ [bold yellow]No vulnerabilities found or no response received.[/bold yellow]")
+        else:
+            console.print(f"\n{result.strip()}")
+
+    except Exception as e:
+        console.print(f"\n❌ [bold red]Error:[/] {e}")
+
+    console.input("\n🔄 [bold white]Press Enter to continue...[/bold white]")
 
 def main():
     console.clear()
@@ -56,12 +105,9 @@ def main():
     }
 
     while True:
-        tools_list = "\n".join(
-            [f"[bold cyan]{num}[/bold cyan] - {tool.__name__}" if tool != "exit" else "[bold red]16 - Exit[/bold red]"
-             for num, tool in tools_map.items()]
-        )
-
-        console.print(Panel(tools_list, title="📌 Available Tools", border_style="bright_yellow"))
+        console.clear()
+        banner(role)
+        menu()
 
         choice = console.input("\n⚡ [bold yellow]>> Your choice:[/] ")
 
@@ -72,8 +118,7 @@ def main():
         if choice in tools_map:
             tool_func = tools_map[choice]
             url = console.input("🌍 [bold cyan]Enter URL or Target:[/] ")
-            if callable(tool_func):
-                console.print(tool_func(url, user_id) if "user_id" in tool_func.__code__.co_varnames else tool_func(url))
+            run_scan(tool_func, user_id, url)
         else:
             console.print("⚠️ [bold yellow]Invalid choice! Try again.[/bold yellow]")
             time.sleep(2)
