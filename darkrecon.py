@@ -134,6 +134,7 @@ def main():
         "10": (dalfox_scan, "🎯 [bold cyan]Enter URL: [/bold cyan]"),
         "11": (nuclei_email_extraction, "📧 [bold cyan]Enter URL: [/bold cyan]"),
         "12": (nuclei_technologies, "🖥️ [bold cyan]Enter URL: [/bold cyan]"),
+        "14": (nuclei_rce_scan, "💀 [bold cyan]Enter URL: [/bold cyan]")
         "13": "exit"
     }
 
