@@ -7,7 +7,11 @@
 
 ---
 
-![Example Image](https://files.catbox.moe/3uyx0a.png)
+![Example Image]([https://files.catbox.moe/asnqtz.png)
+
+##**INFO UPDATE 1.2!!**
+- PENAMBAHAN SCANNER SUBDOMAIN TAKEOVERS VIA 🔥🔥
+- GAK ADA SIH CUMA ITU DOANG WKWKWK
 
 ## **🔥 Fitur Keren:**  
 ✅ **Directory Bruteforce** → Bongkar folder-folder tersembunyi 📁  
