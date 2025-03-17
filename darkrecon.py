@@ -24,7 +24,7 @@ def banner(role_status):
         f"💀 [bold magenta]DarkRecon[/bold magenta] 💀\n"
         f"🛡️ [cyan]Advanced Security Testing Framework[/cyan]\n"
         f"👨‍💻 [bold white]Creator:[/] AryzXploit\n"
-        f"🆙 [bold white]Version:[/] 1.1\n"  
+        f"🆙 [bold white]Version:[/] 1.2\n"  
         f"🔹 [bold white]Status:[/] {status_text}",
         expand=False,
         border_style="bright_magenta"
