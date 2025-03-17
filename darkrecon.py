@@ -39,11 +39,12 @@ def menu():
     table.add_column("Tool", style="bold cyan")
 
     tools = [
-        "🌍 WhatWeb", "🛡️ SQLMap", "🔎 Nuclei (Exposed Panel)", "📡 Nmap", "🚀 GoBuster",
-        "🌐 DNS Tools", "🔍 Nslookup",
-        "[PREMIUM] 🔬 SubRecon & Amass", "[PREMIUM] 📝 WPScan", "[PREMIUM] 🎯 Dalfox",
-        "[PREMIUM] 📧 Nuclei (Email Extraction)", "[PREMIUM] 🖥️ Nuclei (Technologies Detection)",
-        "[bold red]❌ Exit Framework[/bold red]"
+    "🌍 WhatWeb", "🛡️ SQLMap", "🔎 Nuclei (Exposed Panel)", "📡 Nmap", "🚀 GoBuster",
+    "🌐 DNS Tools", "🔍 Nslookup",
+    "[PREMIUM] 🔬 SubRecon & Amass", "[PREMIUM] 📝 WPScan", "[PREMIUM] 🎯 Dalfox",
+    "[PREMIUM] 📧 Nuclei (Email Extraction)", "[PREMIUM] 🖥️ Nuclei (Technologies Detection)",
+    "📂 Nuclei (LFI Scan)", "[PREMIUM] 💥 Nuclei (RCE Scan)", "[PREMIUM] 🌍 Nuclei (SSRF Scan)",
+    "[bold red]❌ Exit Framework[/bold red]"
     ]
 
     for i, tool in enumerate(tools, 1):
@@ -122,19 +123,22 @@ def main():
 
     # Menu dan tools
     tools_map = {
-        "1": (whatweb_scan, "🌍 [bold cyan]Enter URL: [/bold cyan]"),
-        "2": (sqlmap_scan, "🛡️ [bold cyan]Enter URL: [/bold cyan]"),
-        "3": (nuclei_exposed_panel, "🔎 [bold cyan]Enter URL: [/bold cyan]"),
-        "4": (nmap_scan, "📡 [bold cyan]Enter Target (IP/Domain): [/bold cyan]"),
-        "5": (gobuster_scan, "🚀 [bold cyan]Enter URL: [/bold cyan]", "📜 [bold cyan]Enter Wordlist Path: [/bold cyan]"),
-        "6": (dns_tools, "🌐 [bold cyan]Enter Domain: [/bold cyan]"),
-        "7": (nslookup, "🔍 [bold cyan]Enter Domain: [/bold cyan]"),
-        "8": (subrecon_scan, "🔬 [bold cyan]Enter Domain: [/bold cyan]"),
-        "9": (wpscan, "📝 [bold cyan]Enter URL: [/bold cyan]"),
-        "10": (dalfox_scan, "🎯 [bold cyan]Enter URL: [/bold cyan]"),
-        "11": (nuclei_email_extraction, "📧 [bold cyan]Enter URL: [/bold cyan]"),
-        "12": (nuclei_technologies, "🖥️ [bold cyan]Enter URL: [/bold cyan]"),
-        "13": "exit"
+    "1": (whatweb_scan, "🌍 [bold cyan]Enter URL: [/bold cyan]"),
+    "2": (sqlmap_scan, "🛡️ [bold cyan]Enter URL: [/bold cyan]"),
+    "3": (nuclei_exposed_panel, "🔎 [bold cyan]Enter URL: [/bold cyan]"),
+    "4": (nmap_scan, "📡 [bold cyan]Enter Target (IP/Domain): [/bold cyan]"),
+    "5": (gobuster_scan, "🚀 [bold cyan]Enter URL: [/bold cyan]", "📜 [bold cyan]Enter Wordlist Path: [/bold cyan]"),
+    "6": (dns_tools, "🌐 [bold cyan]Enter Domain: [/bold cyan]"),
+    "7": (nslookup, "🔍 [bold cyan]Enter Domain: [/bold cyan]"),
+    "8": (subrecon_scan, "🔬 [bold cyan]Enter Domain: [/bold cyan]"),
+    "9": (wpscan, "📝 [bold cyan]Enter URL: [/bold cyan]"),
+    "10": (dalfox_scan, "🎯 [bold cyan]Enter URL: [/bold cyan]"),
+    "11": (nuclei_email_extraction, "📧 [bold cyan]Enter URL: [/bold cyan]"),
+    "12": (nuclei_technologies, "🖥️ [bold cyan]Enter URL: [/bold cyan]"),
+    "13": (nuclei_lfi_scan, "📂 [bold cyan]Enter URL for LFI Scan: [/bold cyan]"),  # LFI untuk Free User
+    "14": (nuclei_rce_scan, "💥 [bold cyan]Enter URL for RCE Scan: [/bold cyan]"),  # RCE untuk Premium
+    "15": (nuclei_ssrf_scan, "🌍 [bold cyan]Enter URL for SSRF Scan: [/bold cyan]"),  # SSRF untuk Premium
+    "16": "exit"
     }
 
     while True:
