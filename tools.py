@@ -80,29 +80,8 @@ def nuclei_technologies(url, user_id):
     if check_user_role(user_id) in ["premium", "admin"]:
         return run_command(f"nuclei -u {url} -t nuclei-templates/technologies/ -silent")
     return "🔒 Access Denied!"
-
-def nuclei_lfi_scan(url, user_id):
-    if check_user_role(user_id) in ["premium", "admin"]:
-        return run_command(f"nuclei -u {url} -t nuclei-templates/lfi/ -silent")
-    return "🔒 Access Denied!"
-
-def ffuf_scan(url, wordlist, user_id):
-    if check_user_role(user_id) in ["premium", "admin"]:
-        return run_command(f"ffuf -u {url}/FUZZ -w {wordlist}")
-    return "🔒 Access Denied!"
-
-def hakrawler_scan(url, user_id):
-    if check_user_role(user_id) in ["premium", "admin"]:
-        return run_command(f"hakrawler -url {url}")
-    return "🔒 Access Denied!"
-
-def jaeles_scan(url, user_id):
-    if check_user_role(user_id) in ["premium", "admin"]:
-        return run_command(f"jaeles scan -u {url}")
-    return "🔒 Access Denied!"
-
+    
 def nuclei_rce_scan(url, user_id):
     if check_user_role(user_id) in ["premium", "admin"]:
-        return run_command(f"nuclei -u {url} -t nuclei-templates/rce/ -silent")
+        return run_command(f"nuclei -u {url} -tags rce -silent")
     return "🔒 Access Denied!"
-
