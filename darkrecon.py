@@ -15,7 +15,7 @@ def banner(role_status):
         f"💀 [bold magenta]DarkRecon[/bold magenta] 💀\n"
         f"🛡️ [cyan]Advanced Security Testing Framework[/cyan]\n"
         f"👨‍💻 [bold white]Creator:[/] AryzXploit\n"
-        f"🆙 [bold white]Version:[/] 1.2\n"  
+        f"🆙 [bold white]Version:[/] 1.1\n"  
         f"🆓 [bold white]Status:[/] {status_text}",
         expand=False,
         border_style="bright_magenta"
@@ -26,7 +26,10 @@ def check_user_role(user_id):
         with open(os.path.expanduser("~/.config/.hidden_directory/hidden_users.json"), "r") as file:
             data = json.load(file)
 
-        return data["users"].get(user_id, {}).get("role", "none")
+        if user_id in data["users"]:
+            return data["users"][user_id]["role"]
+        else:
+            return "none"
     except (FileNotFoundError, json.JSONDecodeError):
         return "none"
 
@@ -40,7 +43,6 @@ def menu():
         "🌐 DNS Tools", "🔍 Nslookup",
         "[PREMIUM] 🔬 SubRecon & Amass", "[PREMIUM] 📝 WPScan", "[PREMIUM] 🎯 Dalfox",
         "[PREMIUM] 📧 Nuclei (Email Extraction)", "[PREMIUM] 🖥️ Nuclei (Technologies Detection)",
-        "[PREMIUM] 🛠️ Nuclei (LFI Scan)", "[PREMIUM] 🔥 Nuclei (RCE Scan)", "[PREMIUM] 🌍 Nuclei (SSRF Scan)",
         "[bold red]❌ Exit Framework[/bold red]"
     ]
 
@@ -63,11 +65,16 @@ def run_scan(scan_func, user_id, *args):
             
             for i in range(100):
                 progress.update(task, advance=1)
-                time.sleep(0.1)
+                time.sleep(0.11)
+        
+        time.sleep(2)
         
         console.print(f"\n⚡ Running: {scan_func.__name__} with args: {args}\n")
         
-        result = scan_func(*args, user_id) if "user_id" in scan_func.__code__.co_varnames else scan_func(*args)
+        if scan_func in [subrecon_scan, wpscan, dalfox_scan, nuclei_email_extraction, nuclei_technologies]:
+            result = scan_func(*args, user_id)
+        else:
+            result = scan_func(*args)
         
         if not result or result.strip() == "":
             console.print("\n⚠️ [bold yellow]No vulnerabilities found or no response received.[/bold yellow]")
@@ -82,26 +89,52 @@ def run_scan(scan_func, user_id, *args):
 def main():
     console.clear()
 
-    user_id = console.input("\n🔑 [bold cyan]Enter your User ID:[/] ").strip()
-    
-    role = check_user_role(user_id)
-    if role == "none":
-        console.print("❌ [bold red]User ID tidak ditemukan![/bold red] Masukkan ID yang valid.")
-        return
+    # Banner dengan status login
+    banner("none")
 
-    # Ubah sambutan berdasarkan role
-    role_text = "Premium Member" if role == "premium" else "Free Member"
-    console.print(f"\n✅ [bold green]Login berhasil![/bold green] Welcome, [bold cyan]{role_text}[/bold cyan] to DarkRecon.")
-    time.sleep(2)
-    
+    if not os.path.exists(os.path.expanduser("~/.config/.hidden_directory/hidden_users.json")):
+        os.makedirs(os.path.expanduser("~/.config/.hidden_directory/"), exist_ok=True)
+        with open(os.path.expanduser("~/.config/.hidden_directory/hidden_users.json"), "w") as file:
+            file.write('{"users": {}}')
+
+    while True:
+        user_id = console.input("\n🔑 [bold cyan]Enter your User ID:[/] ").strip()
+        
+        if not user_id:
+            console.print("⚠️ [bold yellow]User ID tidak boleh kosong![/bold yellow]")
+            continue
+
+        role = check_user_role(user_id)
+        
+        if role == "none":
+            console.print("❌ [bold red]User ID tidak ditemukan![/bold red] Masukkan ID yang valid.")
+            continue
+
+        break
+
+    # Menambahkan delay setelah login sebelum melanjutkan
+    console.print("\n[bold green]Login berhasil![/bold green] Welcome to DarkRecon.")
+    time.sleep(2)  # Delay 2 detik sebelum masuk ke menu utama
+
+    # Clear screen dan tampilkan banner dengan status role user
     console.clear()
     banner(role)
 
+    # Menu dan tools
     tools_map = {
-        "1": whatweb_scan, "2": sqlmap_scan, "3": nuclei_exposed_panel, "4": nmap_scan,
-        "5": gobuster_scan, "6": dns_tools, "7": nslookup, "8": subrecon_scan,
-        "9": wpscan, "10": dalfox_scan, "11": nuclei_email_extraction, "12": nuclei_technologies,
-        "13": nuclei_lfi_scan, "14": nuclei_rce_scan, "15": nuclei_ssrf_scan, "16": "exit"
+        "1": (whatweb_scan, "🌍 [bold cyan]Enter URL: [/bold cyan]"),
+        "2": (sqlmap_scan, "🛡️ [bold cyan]Enter URL: [/bold cyan]"),
+        "3": (nuclei_exposed_panel, "🔎 [bold cyan]Enter URL: [/bold cyan]"),
+        "4": (nmap_scan, "📡 [bold cyan]Enter Target (IP/Domain): [/bold cyan]"),
+        "5": (gobuster_scan, "🚀 [bold cyan]Enter URL: [/bold cyan]", "📜 [bold cyan]Enter Wordlist Path: [/bold cyan]"),
+        "6": (dns_tools, "🌐 [bold cyan]Enter Domain: [/bold cyan]"),
+        "7": (nslookup, "🔍 [bold cyan]Enter Domain: [/bold cyan]"),
+        "8": (subrecon_scan, "🔬 [bold cyan]Enter Domain: [/bold cyan]"),
+        "9": (wpscan, "📝 [bold cyan]Enter URL: [/bold cyan]"),
+        "10": (dalfox_scan, "🎯 [bold cyan]Enter URL: [/bold cyan]"),
+        "11": (nuclei_email_extraction, "📧 [bold cyan]Enter URL: [/bold cyan]"),
+        "12": (nuclei_technologies, "🖥️ [bold cyan]Enter URL: [/bold cyan]"),
+        "13": "exit"
     }
 
     while True:
@@ -111,17 +144,23 @@ def main():
 
         choice = console.input("\n⚡ [bold yellow]>> Your choice:[/] ")
 
-        if choice == "16":
+        if choice == "13":
             console.print("❌ [bold red]Exiting DarkRecon...[/bold red]")
             break
 
         if choice in tools_map:
-            tool_func = tools_map[choice]
-            url = console.input("🌍 [bold cyan]Enter URL or Target:[/] ")
-            run_scan(tool_func, user_id, url)
+            if choice == "5":
+                tool_func, prompt_url, prompt_wordlist = tools_map[choice]
+                url = console.input(prompt_url)
+                wordlist = console.input(prompt_wordlist)
+                run_scan(tool_func, user_id, url, wordlist)
+            else:
+                tool_func, prompt = tools_map[choice]
+                url = console.input(prompt)
+                run_scan(tool_func, user_id, url)
         else:
             console.print("⚠️ [bold yellow]Invalid choice! Try again.[/bold yellow]")
-            time.sleep(2)
+            time.sleep(3)
 
 if __name__ == "__main__":
     main()
