@@ -40,7 +40,9 @@ def main():
         console.print("❌ [bold red]User ID tidak ditemukan![/bold red] Masukkan ID yang valid.")
         return
 
-    console.print("\n[bold green]Login berhasil![/bold green] Welcome to DarkRecon.")
+    # Ubah sambutan berdasarkan role
+    role_text = "Premium Member" if role == "premium" else "Free Member"
+    console.print(f"\n✅ [bold green]Login berhasil![/bold green] Welcome, [bold cyan]{role_text}[/bold cyan] to DarkRecon.")
     time.sleep(2)
     
     console.clear()
@@ -54,9 +56,12 @@ def main():
     }
 
     while True:
-        console.print("[bold yellow]\n📌 Available Tools:[/bold yellow]")
-        for num, tool in tools_map.items():
-            console.print(f"[bold cyan]{num}[/bold cyan] - {tool.__name__}" if tool != "exit" else "[bold red]16 - Exit[/bold red]")
+        tools_list = "\n".join(
+            [f"[bold cyan]{num}[/bold cyan] - {tool.__name__}" if tool != "exit" else "[bold red]16 - Exit[/bold red]"
+             for num, tool in tools_map.items()]
+        )
+
+        console.print(Panel(tools_list, title="📌 Available Tools", border_style="bright_yellow"))
 
         choice = console.input("\n⚡ [bold yellow]>> Your choice:[/] ")
 
@@ -75,4 +80,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
