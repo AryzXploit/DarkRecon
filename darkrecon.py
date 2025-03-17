@@ -122,20 +122,20 @@ def main():
 
     # Menu dan tools
     tools_map = {
-        "1": (whatweb_scan, "🌍 [bold cyan]Enter URL: [/bold cyan]"),
-        "2": (sqlmap_scan, "🛡️ [bold cyan]Enter URL: [/bold cyan]"),
-        "3": (nuclei_exposed_panel, "🔎 [bold cyan]Enter URL: [/bold cyan]"),
-        "4": (nmap_scan, "📡 [bold cyan]Enter Target (IP/Domain): [/bold cyan]"),
-        "5": (gobuster_scan, "🚀 [bold cyan]Enter URL: [/bold cyan]", "📜 [bold cyan]Enter Wordlist Path: [/bold cyan]"),
-        "6": (dns_tools, "🌐 [bold cyan]Enter Domain: [/bold cyan]"),
-        "7": (nslookup, "🔍 [bold cyan]Enter Domain: [/bold cyan]"),
-        "8": (subrecon_scan, "🔬 [bold cyan]Enter Domain: [/bold cyan]"),
-        "9": (wpscan, "📝 [bold cyan]Enter URL: [/bold cyan]"),
-        "10": (dalfox_scan, "🎯 [bold cyan]Enter URL: [/bold cyan]"),
-        "11": (nuclei_email_extraction, "📧 [bold cyan]Enter URL: [/bold cyan]"),
-        "12": (nuclei_technologies, "🖥️ [bold cyan]Enter URL: [/bold cyan]"),
-        "14": (nuclei_rce_scan, "💀 [bold cyan]Enter URL: [/bold cyan]")
-        "13": "exit"
+    "1": (whatweb_scan, "🌍 [bold cyan]Enter URL: [/bold cyan]"),
+    "2": (sqlmap_scan, "🛡️ [bold cyan]Enter URL: [/bold cyan]"),
+    "3": (nuclei_exposed_panel, "🔎 [bold cyan]Enter URL: [/bold cyan]"),
+    "4": (nmap_scan, "📡 [bold cyan]Enter Target (IP/Domain): [/bold cyan]"),
+    "5": (gobuster_scan, "🚀 [bold cyan]Enter URL: [/bold cyan]", "📜 [bold cyan]Enter Wordlist Path: [/bold cyan]"),
+    "6": (dns_tools, "🌐 [bold cyan]Enter Domain: [/bold cyan]"),
+    "7": (nslookup, "🔍 [bold cyan]Enter Domain: [/bold cyan]"),
+    "8": (subrecon_scan, "🔬 [bold cyan]Enter Domain: [/bold cyan]"),
+    "9": (wpscan, "📝 [bold cyan]Enter URL: [/bold cyan]"),
+    "10": (dalfox_scan, "🎯 [bold cyan]Enter URL: [/bold cyan]"),
+    "11": (nuclei_email_extraction, "📧 [bold cyan]Enter URL: [/bold cyan]"),
+    "12": (nuclei_technologies, "🖥️ [bold cyan]Enter URL: [/bold cyan]"),
+    "13": (nuclei_rce_scan, "💀 [bold cyan]Enter URL: [/bold cyan]"),  # ✅ Tambahin di sini dengan format yang benar
+    "14": "exit"
     }
 
     while True:
