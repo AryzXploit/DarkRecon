@@ -1,110 +1,78 @@
-# tools.py
-import json
-import subprocess
 from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn, TimeElapsedColumn
+from tools import *
 import os
+import time
+import json  
 
 console = Console()
 
-# Load user data dari path baru yang aman
-SECRET_DIR = os.path.expanduser("~/.config/.hidden_directory/")
-SECRET_FILE = os.path.join(SECRET_DIR, "hidden_users.json")
-
-def load_users():
-    try:
-        with open(SECRET_FILE, "r") as file:
-            return json.load(file)
-    except (FileNotFoundError, json.JSONDecodeError):
-        return {"users": {}}
+def banner(role_status):
+    status_text = "[bold green]Premium Access[/bold green]" if role_status == "premium" else "[bold yellow]Free Access[/bold yellow]"
+    console.print(Panel(
+        f"💀 [bold magenta]DarkRecon[/bold magenta] 💀\n"
+        f"🛡️ [cyan]Advanced Security Testing Framework[/cyan]\n"
+        f"👨‍💻 [bold white]Creator:[/] AryzXploit\n"
+        f"🆙 [bold white]Version:[/] 1.1\n"  
+        f"🆓 [bold white]Status:[/] {status_text}",
+        expand=False,
+        border_style="bright_magenta"
+    ))
 
 def check_user_role(user_id):
-    users = load_users()
-    return users["users"].get(user_id, {}).get("role", "free") 
-
-def run_command(command):
     try:
-        console.print(f"\n⚡ [bold cyan]Running: {command}[/bold cyan]\n")
-        result = subprocess.run(command, shell=True, text=True, capture_output=True)
+        with open(os.path.expanduser("~/.config/.hidden_directory/hidden_users.json"), "r") as file:
+            data = json.load(file)
 
-        stdout = result.stdout.strip()
-        stderr = result.stderr.strip()
+        return data["users"].get(user_id, {}).get("role", "none")
+    except (FileNotFoundError, json.JSONDecodeError):
+        return "none"
 
-        if stderr:
-            return f"❌ [bold red]Real Error:[/] {stderr}"
-        
-        if not stdout:
-            return "⚠️ [bold yellow]No vulnerabilities found or no output returned![/bold yellow]"
-        
-        filtered_output = "\n".join([
-            line for line in stdout.splitlines()
-            if not any(ignore in line for ignore in ["INF]", "WRN]", "projectdiscovery.io"])
-        ]).strip()
+def main():
+    console.clear()
 
-        if filtered_output:
-            return filtered_output
+    user_id = console.input("\n🔑 [bold cyan]Enter your User ID:[/] ").strip()
+    
+    role = check_user_role(user_id)
+    if role == "none":
+        console.print("❌ [bold red]User ID tidak ditemukan![/bold red] Masukkan ID yang valid.")
+        return
+
+    console.print("\n[bold green]Login berhasil![/bold green] Welcome to DarkRecon.")
+    time.sleep(2)
+    
+    console.clear()
+    banner(role)
+
+    tools_map = {
+        "1": whatweb_scan, "2": sqlmap_scan, "3": nuclei_exposed_panel, "4": nmap_scan,
+        "5": gobuster_scan, "6": dns_tools, "7": nslookup, "8": subrecon_scan,
+        "9": wpscan, "10": dalfox_scan, "11": nuclei_email_extraction, "12": nuclei_technologies,
+        "13": nuclei_lfi_scan, "14": nuclei_rce_scan, "15": nuclei_ssrf_scan, "16": "exit"
+    }
+
+    while True:
+        console.print("[bold yellow]\n📌 Available Tools:[/bold yellow]")
+        for num, tool in tools_map.items():
+            console.print(f"[bold cyan]{num}[/bold cyan] - {tool.__name__}" if tool != "exit" else "[bold red]16 - Exit[/bold red]")
+
+        choice = console.input("\n⚡ [bold yellow]>> Your choice:[/] ")
+
+        if choice == "16":
+            console.print("❌ [bold red]Exiting DarkRecon...[/bold red]")
+            break
+
+        if choice in tools_map:
+            tool_func = tools_map[choice]
+            url = console.input("🌍 [bold cyan]Enter URL or Target:[/] ")
+            if callable(tool_func):
+                console.print(tool_func(url, user_id) if "user_id" in tool_func.__code__.co_varnames else tool_func(url))
         else:
-            return "⚠️ [bold yellow]No relevant output received from the command![/bold yellow]"
-    except Exception as e:
-        return f"❌ [bold red]Exception:[/] {e}"
+            console.print("⚠️ [bold yellow]Invalid choice! Try again.[/bold yellow]")
+            time.sleep(2)
 
-# ✅ FREE TOOLS
-def whatweb_scan(url): return run_command(f"whatweb {url}")
-def sqlmap_scan(url): return run_command(f"sqlmap -u {url} --random-agent --batch --dbs --level 3 --tamper=between,space2comment --hex --delay 5")
-def nuclei_exposed_panel(url): return run_command(f"nuclei -u {url} -t /home/user/nuclei-templates/http/exposed-panels/ -silent")
-def nmap_scan(target): return run_command(f"nmap -sV {target}")
-def gobuster_scan(url, wordlist): return run_command(f"gobuster dir -u {url} -w {wordlist}")
-def dns_tools(domain): return run_command(f"dig {domain}")
-def nslookup(domain): return run_command(f"nslookup {domain}")
-def nuclei_lfi_scan(url): return run_command(f"nuclei -u {url} -t /home/user/nuclei-templates/http/lfi/ -silent")
-
-# 🔥 TOOLS BARU (FREE)
-def reverse_ip_lookup(ip): return run_command(f"curl -s https://api.hackertarget.com/reverseiplookup/?q={ip}")
-def wayback_urls(domain): return run_command(f"curl -s https://web.archive.org/cdx/search/cdx?url={domain}/*&output=text&fl=original")
-def gau_scan(domain): return run_command(f"gau {domain}")
-
-# 🔒 PREMIUM TOOLS
-def subrecon_scan(domain, user_id):
-    if check_user_role(user_id) in ["premium", "admin"]:
-        return run_command(f"SubRecon -d {domain}")
-    return "🔒 Access Denied!"
-
-def wpscan(url, user_id):
-    if check_user_role(user_id) in ["premium", "admin"]:
-        return run_command(f"wpscan --url {url} --enumerate vp,vt,u")
-    return "🔒 Access Denied!"
-
-def dalfox_scan(url, user_id):
-    if check_user_role(user_id) in ["premium", "admin"]:
-        return run_command(f"dalfox url {url}")
-    return "🔒 Access Denied!"
-
-def nuclei_email_extraction(url, user_id):
-    if check_user_role(user_id) in ["premium", "admin"]:
-        return run_command(f"nuclei -u {url} -t /home/user/nuclei-templates/http/exposures/ -silent")
-    return "🔒 Access Denied!"
-
-def nuclei_technologies(url, user_id):
-    if check_user_role(user_id) in ["premium", "admin"]:
-        return run_command(f"nuclei -u {url} -tags technologies -silent")
-    return "🔒 Access Denied!"
-
-def nuclei_rce_scan(url, user_id):
-    if check_user_role(user_id) in ["premium", "admin"]:
-        return run_command(f"nuclei -u {url} -tags rce -silent")
-    return "🔒 Access Denied!"
-
-def nuclei_ssrf_scan(url, user_id):
-    if check_user_role(user_id) in ["premium", "admin"]:
-        return run_command(f"nuclei -u {url} -tags ssrf -silent")
-
-# 🔥 TOOLS BARU (PREMIUM)
-def paramspider_scan(domain, user_id):
-    if check_user_role(user_id) in ["premium", "admin"]:
-        return run_command(f"python3 ~/ParamSpider/paramspider.py -d {domain} --quiet")
-    return "🔒 Access Denied!"
-
-def jaeles_scan(url, user_id):
-    if check_user_role(user_id) in ["premium", "admin"]:
-        return run_command(f"jaeles scan -u {url} --verbose")
-    return "🔒 Access Denied!"
+if __name__ == "__main__":
+    main()
 
