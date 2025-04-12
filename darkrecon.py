@@ -85,10 +85,17 @@ def run_scan(scan_func, user_id, *args):
         else:
             result = scan_func(*args)
         
-        if not result or result.strip() == "":
-            console.print("\n⚠️ [bold yellow]No vulnerabilities found or no response received.[/bold yellow]")
-        else:
-            console.print(f"\n{result.strip()}")
+       if not result or result.strip() == "":
+    console.print("\n⚠️ [bold yellow]No vulnerabilities found or no response received.[/bold yellow]")
+else:
+    console.print(f"\n{result.strip()}")
+
+    # ✅ Kirim ke Discord kalo tool_name dan url ketahuan
+    try:
+        tool_name = scan_func.__name__.replace("_scan", "").upper()
+        send_to_discord(result.strip(), tool_name, args[0])  # args[0] = URL
+    except Exception as e:
+        console.print(f"❌ [bold red]Error sending to Discord:[/] {e}")
 
     except Exception as e:
         console.print(f"\n❌ [bold red]Error:[/] {e}")
