@@ -10,21 +10,18 @@ import json
 console = Console()
 
 def banner(role_status):
-    # Mapping role dengan emoji
     role_map = {
         "premium": "[bold green]🔑 Premium Access[/bold green]",
         "admin": "[bold red]💀 Admin Access[/bold red]",
         "member": "[bold yellow]🆓 Free Access[/bold yellow]",
     }
-
-    # Ambil status berdasarkan role, default ke Free Access
     status_text = role_map.get(role_status, "[bold yellow]🆓 Free Access[/bold yellow]")
 
     console.print(Panel(
         f"💀 [bold magenta]DarkRecon[/bold magenta] 💀\n"
         f"🛡️ [cyan]Advanced Security Testing Framework[/cyan]\n"
         f"👨‍💻 [bold white]Creator:[/] AryzXploit\n"
-        f"🆙 [bold white]Version:[/] 1.2\n"  
+        f"🆙 [bold white]Version:[/] 1.2\n"
         f"🔹 [bold white]Status:[/] {status_text}",
         expand=False,
         border_style="bright_magenta"
@@ -34,11 +31,7 @@ def check_user_role(user_id):
     try:
         with open(os.path.expanduser("~/.config/.hidden_directory/hidden_users.json"), "r") as file:
             data = json.load(file)
-
-        if user_id in data["users"]:
-            return data["users"][user_id]["role"]
-        else:
-            return "none"
+        return data["users"].get(user_id, {}).get("role", "none")
     except (FileNotFoundError, json.JSONDecodeError):
         return "none"
 
@@ -71,37 +64,28 @@ def run_scan(scan_func, user_id, *args):
             console=console
         ) as progress:
             task = progress.add_task("Scanning...", total=100)
-            
-            for i in range(100):
+            for _ in range(100):
                 progress.update(task, advance=1)
-                time.sleep(0.11)
-        
-        time.sleep(2)
-        
+                time.sleep(0.05)
+
+        time.sleep(1)
+
         console.print(f"\n⚡ Running: {scan_func.__name__} with args: {args}\n")
-        
-try:
-    if scan_func in [subrecon_scan, wpscan, dalfox_scan, nuclei_email_extraction, nuclei_technologies, nuclei_rce_scan]:
-        result = scan_func(*args, user_id)
-    else:
-        result = scan_func(*args)
 
-    if not result or result.strip() == "":
-        print("Result kosong")
-except Exception as e:
-    print(f"Error saat jalanin scan: {e}")
-        
-       if not result or result.strip() == "":
-    console.print("\n⚠️ [bold yellow]No vulnerabilities found or no response received.[/bold yellow]")
-else:
-    console.print(f"\n{result.strip()}")
+        if scan_func in [subrecon_scan, wpscan, dalfox_scan, nuclei_email_extraction, nuclei_technologies, nuclei_rce_scan]:
+            result = scan_func(*args, user_id)
+        else:
+            result = scan_func(*args)
 
-    # ✅ Kirim ke Discord kalo tool_name dan url ketahuan
-    try:
-        tool_name = scan_func.__name__.replace("_scan", "").upper()
-        send_to_discord(result.strip(), tool_name, args[0])  # args[0] = URL
-    except Exception as e:
-        console.print(f"❌ [bold red]Error sending to Discord:[/] {e}")
+        if not result or result.strip() == "":
+            console.print("\n⚠️ [bold yellow]No vulnerabilities found or no response received.[/bold yellow]")
+        else:
+            console.print(f"\n{result.strip()}")
+            try:
+                tool_name = scan_func.__name__.replace("_scan", "").upper()
+                send_to_discord(result.strip(), tool_name, args[0])
+            except Exception as e:
+                console.print(f"❌ [bold red]Error sending to Discord:[/] {e}")
 
     except Exception as e:
         console.print(f"\n❌ [bold red]Error:[/] {e}")
@@ -110,11 +94,9 @@ else:
 
 def main():
     console.clear()
-
     banner("none")
-    
+
     user_file_path = os.path.expanduser("~/.config/.hidden_directory/hidden_users.json")
-    
     if not os.path.exists(user_file_path):
         os.makedirs(os.path.dirname(user_file_path), exist_ok=True)
         with open(user_file_path, "w") as file:
@@ -122,17 +104,13 @@ def main():
 
     while True:
         user_id = console.input("\n🔑 [bold cyan]Enter your User ID:[/] ").strip()
-        
         if not user_id:
             console.print("⚠️ [bold yellow]User ID tidak boleh kosong![/bold yellow]")
             continue
-
         role = check_user_role(user_id)
-        
         if role == "none":
             console.print("❌ [bold red]User ID tidak ditemukan![/bold red] Masukkan ID yang valid.")
             continue
-
         break
 
     role_emoji = {
@@ -151,15 +129,13 @@ def main():
         console=console
     ) as progress:
         task = progress.add_task("Loading...", total=100)
-        
         for _ in range(100):
             progress.update(task, advance=1)
             time.sleep(0.05)
 
     console.print("\n🚀 [bold cyan]DarkRecon is ready![/bold cyan]")
-    time.sleep(1.5)  
+    time.sleep(1.5)
     console.clear()
-
     banner(role)
 
     tools_map = {
@@ -172,10 +148,10 @@ def main():
         "7": (nslookup, "🔍 [bold cyan]Enter Domain: [/bold cyan]"),
         "8": (subrecon_scan, "🔬 [bold cyan]Enter Domain: [/bold cyan]"),
         "9": (wpscan, "📝 [bold cyan]Enter URL: [/bold cyan]"),
-        "10":(dalfox_scan, "🎯 [bold cyan]Enter URL: [/bold cyan]"),
-        "11":(nuclei_email_extraction, "📧 [bold cyan]Enter URL: [/bold cyan]"),
-        "12":(nuclei_rce_scan, "🖥️ [bold cyan]Enter URL: [/bold cyan]"),
-        "14": "exit"
+        "10": (dalfox_scan, "🎯 [bold cyan]Enter URL: [/bold cyan]"),
+        "11": (nuclei_email_extraction, "📧 [bold cyan]Enter URL: [/bold cyan]"),
+        "12": (nuclei_rce_scan, "🖥️ [bold cyan]Enter URL: [/bold cyan]"),
+        "13": "exit"
     }
 
     while True:
