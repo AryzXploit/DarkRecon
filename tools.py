@@ -6,13 +6,14 @@ import requests
 
 console = Console()
 
-# Load user data dari path baru yang aman
+# Path ke file user-role
 SECRET_DIR = os.path.expanduser("~/.config/.hidden_directory/")
 SECRET_FILE = os.path.join(SECRET_DIR, "hidden_users.json")
 
-# URL Webhook Discord lu
-DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1359619004729393252/VIASj6Dv1luGHfq58ljxK3jcisJ0WWjeSC-lTaj95-5YGJ3makvv84_AgKnm8CmueWft"  # Ganti ini bro!
+# Ganti webhook lu kalau belum
+DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1359619004729393252/VIASj6Dv1luGHfq58ljxK3jcisJ0WWjeSC-lTaj95-5YGJ3makvv84_AgKnm8CmueWft"
 
+# --- Load user dari file ---
 def load_users():
     try:
         with open(SECRET_FILE, "r") as file:
@@ -24,7 +25,12 @@ def check_user_role(user_id):
     users = load_users()
     return users["users"].get(user_id, {}).get("role", "free")
 
+# --- Kirim hasil ke Discord ---
 def send_to_discord(result, tool_name, url):
+    if not DISCORD_WEBHOOK or "discord.com/api/webhooks/" not in DISCORD_WEBHOOK:
+        console.print("❌ [bold red]Webhook Discord belum di-setup atau salah![/]")
+        return
+
     try:
         if not result.strip():
             return
@@ -34,10 +40,11 @@ def send_to_discord(result, tool_name, url):
         headers = {"Content-Type": "application/json"}
         response = requests.post(DISCORD_WEBHOOK, json=payload, headers=headers)
         if response.status_code != 204:
-            console.print(f"⚠️ [bold yellow]Gagal kirim ke Discord: {response.status_code}[/bold yellow]")
+            console.print(f"⚠️ [bold yellow]Gagal kirim ke Discord. Status: {response.status_code}, Resp: {response.text}[/bold yellow]")
     except Exception as e:
-        console.print(f"❌ [bold red]Error Discord Webhook:[/] {e}")
+        console.print(f"❌ [bold red]Error kirim webhook:[/] {e}")
 
+# --- Jalankan tools ---
 def run_command(command, tool_name=None, url=None):
     try:
         console.print(f"\n⚡ [bold cyan]Running: {command}[/bold cyan]\n")
@@ -46,11 +53,8 @@ def run_command(command, tool_name=None, url=None):
         stdout = result.stdout.strip()
         stderr = result.stderr.strip()
 
-        if stderr:
-            return f"❌ [bold red]Real Error:[/] {stderr}"
-
-        if not stdout:
-            return "⚠️ [bold yellow]No vulnerabilities found or no output returned![/bold yellow]"
+        if not stdout and stderr:
+            return f"❌ [bold red]Error:[/] {stderr}"
 
         filtered_output = "\n".join([
             line for line in stdout.splitlines()
@@ -61,12 +65,16 @@ def run_command(command, tool_name=None, url=None):
             if tool_name and url:
                 send_to_discord(filtered_output, tool_name, url)
             return filtered_output
+        elif stdout:
+            return stdout
         else:
-            return "⚠️ [bold yellow]No relevant output received from the command![/bold yellow]"
+            return "⚠️ [bold yellow]No output or no relevant result returned![/bold yellow]"
     except Exception as e:
-        return f"❌ [bold red]Exception:[/] {e}"
+        return f"❌ [bold red]Exception saat eksekusi:[/] {e}"
 
-# ✅ FREE TOOLS
+# -------------------------
+# ✅ TOOLS GRATIS
+# -------------------------
 def whatweb_scan(url): return run_command(f"whatweb {url}", "WhatWeb", url)
 def sqlmap_scan(url): return run_command(f"sqlmap -u {url} --random-agent --batch --dbs --level 3 --tamper=between,space2comment --hex --delay 5", "SQLMap", url)
 def nuclei_exposed_panel(url): return run_command(f"nuclei -u {url} -t exposures -silent", "Nuclei Panel", url)
@@ -76,7 +84,9 @@ def dns_tools(domain): return run_command(f"dig {domain}", "Dig", domain)
 def nslookup(domain): return run_command(f"nslookup {domain}", "NSLookup", domain)
 def subzy(domain): return run_command(f"subzy run --target {domain}", "Subzy", domain)
 
-# 🔒 PREMIUM TOOLS
+# -------------------------
+# 🔒 TOOLS PREMIUM
+# -------------------------
 def subrecon_scan(domain, user_id):
     if check_user_role(user_id) in ["premium", "admin"]:
         return run_command(f"SubRecon -d {domain}", "SubRecon", domain)
