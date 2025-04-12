@@ -80,13 +80,16 @@ def run_scan(scan_func, user_id, *args):
         
         console.print(f"\n⚡ Running: {scan_func.__name__} with args: {args}\n")
         
+try:
     if scan_func in [subrecon_scan, wpscan, dalfox_scan, nuclei_email_extraction, nuclei_technologies, nuclei_rce_scan]:
         result = scan_func(*args, user_id)
     else:
         result = scan_func(*args)
 
     if not result or result.strip() == "":
-        # lanjutkan logic lu di sini
+        print("Result kosong")
+except Exception as e:
+    print(f"Error saat jalanin scan: {e}")
         
        if not result or result.strip() == "":
     console.print("\n⚠️ [bold yellow]No vulnerabilities found or no response received.[/bold yellow]")
