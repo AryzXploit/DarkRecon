@@ -3,6 +3,7 @@ import subprocess
 from rich.console import Console
 import os
 import requests
+import re
 
 console = Console()
 
