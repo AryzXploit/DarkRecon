@@ -77,21 +77,23 @@ def run_command(command, tool_name=None, url=None):
         if not stdout and stderr:
             return f"❌ [bold red]Error:[/] {stderr}"
 
-        # Filter output
         filtered_output = "\n".join([
             line for line in stdout.splitlines()
             if not any(ignore in line for ignore in ["INF]", "WRN]", "projectdiscovery.io"])
         ]).strip()
 
-        # Gunakan filtered jika ada, fallback ke stdout
         output_to_send = filtered_output if filtered_output else stdout
-        output_to_send = strip_ansi_codes(output_to_send)  # Clean ANSI sebelum kirim
+        output_to_send = strip_ansi_codes(output_to_send)
 
-        if output_to_send and tool_name and url:
+        # Flag biar gak kekirim dua kali
+        sent_to_discord = False
+
+        if output_to_send and tool_name and url and not sent_to_discord:
             send_to_discord(output_to_send, tool_name, url)
+            sent_to_discord = True
 
         return output_to_send if output_to_send else "⚠️ [bold yellow]No output or no relevant result returned![/bold yellow]"
-    
+
     except Exception as e:
         return f"❌ [bold red]Exception saat eksekusi:[/] {e}"
 
