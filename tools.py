@@ -83,10 +83,12 @@ def run_command(command, tool_name=None, url=None):
             if not any(ignore in line for ignore in ["INF]", "WRN]", "projectdiscovery.io"])
         ]).strip()
 
-        # Kirim hanya sekali, entah dari filtered atau original
-        output_to_send = filtered_output if filtered_output else stdout
-        if output_to_send and tool_name and url:
-            send_to_discord(output_to_send, tool_name, url)
+# Clean result dari ANSI biar ga kacau di Discord
+output_to_send = strip_ansi_codes(filtered_output if filtered_output else stdout)
+
+# Kirim ke Discord cuma sekali
+if output_to_send and tool_name and url:
+    send_to_discord(output_to_send, tool_name, url)
 
         return output_to_send if output_to_send else "⚠️ [bold yellow]No output or no relevant result returned![/bold yellow]"
     
