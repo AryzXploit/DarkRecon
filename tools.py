@@ -26,6 +26,10 @@ def check_user_role(user_id):
     return users["users"].get(user_id, {}).get("role", "free")
 
 # --- Kirim hasil ke Discord ---
+def strip_ansi_codes(text):
+    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    return ansi_escape.sub('', text)
+
 def send_to_discord(result, tool_name, url):
     if not DISCORD_WEBHOOK or "discord.com/api/webhooks/" not in DISCORD_WEBHOOK:
         console.print("❌ [bold red]Webhook Discord belum di-setup atau salah![/]")
