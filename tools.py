@@ -11,7 +11,7 @@ SECRET_DIR = os.path.expanduser("~/.config/.hidden_directory/")
 SECRET_FILE = os.path.join(SECRET_DIR, "hidden_users.json")
 
 # Ganti webhook lu kalau belum
-DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1360660554968076298/b7bs6DF1kQBpA9aoyLgOEbxEmCJ2bdlLM_m4loXP2SCUehFzBI3KFKe5lwrfTozlfxsY=="
+DISCORD_WEBHOOK = "https://discord.com/api/webhooks/xxx/yyy"  # ganti sesuai punyamu
 
 # --- Load user dari file ---
 def load_users():
@@ -32,15 +32,31 @@ def send_to_discord(result, tool_name, url):
         return
 
     try:
-        if not result.strip():
+        cleaned_result = result.strip()
+        if not cleaned_result:
             return
+
+        # Potong output kalau terlalu panjang
+        max_length = 1900
+        if len(cleaned_result) > max_length:
+            cleaned_result = cleaned_result[:max_length] + "\n... [output truncated]"
+
         payload = {
-            "content": f"**🛠️ Tool:** {tool_name}\n**🌐 Target:** {url}\n```\n{result.strip()[:1800]}```"
+            "embeds": [
+                {
+                    "title": f"🛠️ Tool: {tool_name}",
+                    "description": f"🌐 **Target:** `{url}`\n```\n{cleaned_result}\n```",
+                    "color": 5814783
+                }
+            ]
         }
+
         headers = {"Content-Type": "application/json"}
         response = requests.post(DISCORD_WEBHOOK, json=payload, headers=headers)
-        if response.status_code != 204:
+
+        if response.status_code not in [200, 204]:
             console.print(f"⚠️ [bold yellow]Gagal kirim ke Discord. Status: {response.status_code}, Resp: {response.text}[/bold yellow]")
+
     except Exception as e:
         console.print(f"❌ [bold red]Error kirim webhook:[/] {e}")
 
@@ -54,27 +70,23 @@ def run_command(command, tool_name=None, url=None):
         stderr = result.stderr.strip()
 
         if not stdout and stderr:
-            return f"❌ [bold red]Error:[/] {stderr}"
+            return f"❌ Error: {stderr}"
 
         filtered_output = "\n".join([
             line for line in stdout.splitlines()
             if not any(ignore in line for ignore in ["INF]", "WRN]", "projectdiscovery.io"])
         ]).strip()
 
-        if filtered_output:
-            if tool_name and url:
-                send_to_discord(filtered_output, tool_name, url)
-            return filtered_output
-        elif stdout:
-            return stdout
-        else:
-            return "⚠️ [bold yellow]No output or no relevant result returned![/bold yellow]"
-    except Exception as e:
-        return f"❌ [bold red]Exception saat eksekusi:[/] {e}"
+        output_to_return = filtered_output if filtered_output else stdout
 
-# -------------------------
+        if output_to_return and tool_name and url:
+            send_to_discord(output_to_return, tool_name, url)
+
+        return output_to_return if output_to_return else "⚠️ Tidak ada hasil relevan."
+    except Exception as e:
+        return f"❌ Exception saat eksekusi: {e}"
+
 # ✅ TOOLS GRATIS
-# -------------------------
 def whatweb_scan(url): return run_command(f"whatweb {url}", "WhatWeb", url)
 def sqlmap_scan(url): return run_command(f"sqlmap -u {url} --random-agent --batch --dbs --level 3 --tamper=between,space2comment --hex --delay 5", "SQLMap", url)
 def nuclei_exposed_panel(url): return run_command(f"nuclei -u {url} -t exposures -silent", "Nuclei Panel", url)
@@ -84,9 +96,7 @@ def dns_tools(domain): return run_command(f"dig {domain}", "Dig", domain)
 def nslookup(domain): return run_command(f"nslookup {domain}", "NSLookup", domain)
 def subzy(domain): return run_command(f"subzy run --target {domain}", "Subzy", domain)
 
-# -------------------------
 # 🔒 TOOLS PREMIUM
-# -------------------------
 def subrecon_scan(domain, user_id):
     if check_user_role(user_id) in ["premium", "admin"]:
         return run_command(f"SubRecon -d {domain}", "SubRecon", domain)
