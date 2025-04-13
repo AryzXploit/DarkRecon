@@ -3,7 +3,7 @@ import subprocess
 from rich.console import Console
 import os
 import requests
-import re
+import re  # <-- Tambahin ini
 
 console = Console()
 
@@ -12,7 +12,7 @@ SECRET_DIR = os.path.expanduser("~/.config/.hidden_directory/")
 SECRET_FILE = os.path.join(SECRET_DIR, "hidden_users.json")
 
 # Ganti webhook lu kalau belum
-DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1360660554968076298/b7bs6DF1kQBpA9aoyLgOEbxEmCJ2bdlLM_m4loXP2SCUehFzBI3KFKe5lwrfTozlfxsY"  # ganti sesuai punyamu
+DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1360660554968076298/b7bs6DF1kQBpA9aoyLgOEbxEmCJ2bdlLM_m4loXP2SCUehFzBI3KFKe5lwrfTozlfxsY"
 
 # --- Load user dari file ---
 def load_users():
@@ -83,12 +83,12 @@ def run_command(command, tool_name=None, url=None):
             if not any(ignore in line for ignore in ["INF]", "WRN]", "projectdiscovery.io"])
         ]).strip()
 
-# Clean result dari ANSI biar ga kacau di Discord
-output_to_send = strip_ansi_codes(filtered_output if filtered_output else stdout)
+        # Gunakan filtered jika ada, fallback ke stdout
+        output_to_send = filtered_output if filtered_output else stdout
+        output_to_send = strip_ansi_codes(output_to_send)  # Clean ANSI sebelum kirim
 
-# Kirim ke Discord cuma sekali
-if output_to_send and tool_name and url:
-    send_to_discord(output_to_send, tool_name, url)
+        if output_to_send and tool_name and url:
+            send_to_discord(output_to_send, tool_name, url)
 
         return output_to_send if output_to_send else "⚠️ [bold yellow]No output or no relevant result returned![/bold yellow]"
     
