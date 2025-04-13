@@ -70,21 +70,23 @@ def run_command(command, tool_name=None, url=None):
         stderr = result.stderr.strip()
 
         if not stdout and stderr:
-            return f"❌ Error: {stderr}"
+            return f"❌ [bold red]Error:[/] {stderr}"
 
+        # Filter output
         filtered_output = "\n".join([
             line for line in stdout.splitlines()
             if not any(ignore in line for ignore in ["INF]", "WRN]", "projectdiscovery.io"])
         ]).strip()
 
-        output_to_return = filtered_output if filtered_output else stdout
+        # Kirim hanya sekali, entah dari filtered atau original
+        output_to_send = filtered_output if filtered_output else stdout
+        if output_to_send and tool_name and url:
+            send_to_discord(output_to_send, tool_name, url)
 
-        if output_to_return and tool_name and url:
-            send_to_discord(output_to_return, tool_name, url)
-
-        return output_to_return if output_to_return else "⚠️ Tidak ada hasil relevan."
+        return output_to_send if output_to_send else "⚠️ [bold yellow]No output or no relevant result returned![/bold yellow]"
+    
     except Exception as e:
-        return f"❌ Exception saat eksekusi: {e}"
+        return f"❌ [bold red]Exception saat eksekusi:[/] {e}"
 
 # ✅ TOOLS GRATIS
 def whatweb_scan(url): return run_command(f"whatweb {url}", "WhatWeb", url)
