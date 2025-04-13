@@ -80,10 +80,11 @@ def run_scan(scan_func, user_id, *args):
         if not result or result.strip() == "":
             console.print("\n⚠️ [bold yellow]No vulnerabilities found or no response received.[/bold yellow]")
         else:
-            console.print(f"\n{result.strip()}")
+            result_cleaned = strip_ansi_codes(result.strip())
+            console.print(f"\n{result_cleaned}")
             try:
                 tool_name = scan_func.__name__.replace("_scan", "").upper()
-                send_to_discord(result.strip(), tool_name, args[0])
+                send_to_discord(result_cleaned, tool_name, args[0])
             except Exception as e:
                 console.print(f"❌ [bold red]Error sending to Discord:[/] {e}")
 
