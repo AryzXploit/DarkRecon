@@ -2,7 +2,6 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn, TimeElapsedColumn
-from tools import strip_ansi_codes
 from tools import *
 import os
 import time
